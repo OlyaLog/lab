@@ -15,35 +15,47 @@ void Matrix3x3::setElement(const int i, const int j, const int value)
 
 void Matrix3x3::fillRandomElements(const int minVal, const int maxVal)
 {
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
+	for (int i = 0; i < size; i++)
+		for (int j = 0; j < size; j++)
 			setElement(i, j, rand() % 20 - 10);
 }
 
 int Matrix3x3::sumPrincipalDiag() const
 {
-	return element(0, 0) + element(1, 1) + element(2, 2);
+	int sum = 0;
+	for (int i = 0; i < size; i++)
+		sum += element(i, i);
+	return sum;
 }
 
 int Matrix3x3::sumSecondaryDiag() const
 {
-	return element(0,2) + element(1,1) + element(2,0);
+	int sum = 0;
+	for (int i = 0; i < size; i++)
+		sum += element(i, size - 1 - i);
+	return sum;
 }
 
 int Matrix3x3::productPrincipalDiag() const
 {
-	return element(0, 0) * element(1, 1) * element(2, 2);
+	int product = 1;
+	for (int i = 0; i < size; i++)
+		product *= element(i, i);
+	return product;
 }
 
 int Matrix3x3::productSecondaryDiag() const
 {
-	return element(0, 2) * element(1, 1) * element(2, 0);
+	int product = 1;
+	for (int i = 0; i < size; i++)
+		product *= element(i, size - 1 - i);
+	return product;
 }
 
 int Matrix3x3::sumRow(const int iRow) const
 {
 	int sum = 0;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < size; i++)
 		sum += element(iRow, i);
 	return sum;
 }
@@ -51,7 +63,7 @@ int Matrix3x3::sumRow(const int iRow) const
 int Matrix3x3::minColumn(const int iCol) const
 {
 	int min = element(0, iCol);
-	for (int i = 1; i < 3; i++)
+	for (int i = 1; i < size; i++)
 	{
 		if (element(i, iCol) < min)
 			min = element(i, iCol);
@@ -62,7 +74,7 @@ int Matrix3x3::minColumn(const int iCol) const
 int Matrix3x3::maxColumn(const int iCol) const
 {
 	int max = element(0, iCol);
-	for (int i = 1; i < 3; i++)
+	for (int i = 1; i < size; i++)
 	{
 		if (element(i, iCol) > max)
 			max = element(i, iCol);

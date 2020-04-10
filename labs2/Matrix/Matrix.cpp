@@ -1,7 +1,4 @@
-﻿// ConsoleApplication2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
 #include "Matrix3x3.h"
 #include "MatrixXnX.h"
 
@@ -11,15 +8,15 @@ int main()
 {
 	Matrix3x3 matrix;
 	matrix.fillRandomElements(-10, 10);
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < matrix.size; i++)
 	{
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < matrix.size; j++)
 		{
 			cout << matrix.element(i, j) <<" ";
 		}
 		cout << endl;
 	}
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < matrix.size; i++)
 	{
 		cout << "Sum line "<< i + 1 <<" = " << matrix.sumRow(i) << endl;
 		cout << "Min column "<< i + 1 <<" = " << matrix.minColumn(i) << endl;
