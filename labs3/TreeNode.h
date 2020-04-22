@@ -21,7 +21,7 @@ public:
 	int getValue() { return value; }
 	TreeNode* getLeft() { return left; }
 	TreeNode* getRight() { return right; }
-	void addValue(int newValue);
+	void setValue(int newValue);
 	void addLeft(TreeNode* newLeft);
 	void addRight(TreeNode* newRight);
 	

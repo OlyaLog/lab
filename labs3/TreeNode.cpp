@@ -1,6 +1,6 @@
 #include "TreeNode.h"
 
-void TreeNode::addValue(int newValue)
+void TreeNode::setValue(int newValue)
 {
 	value = newValue;
 }
