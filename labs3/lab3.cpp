@@ -3,32 +3,22 @@
 
 using namespace std;
 
-void createLeft(BinaryTree* binaryTree, int* begin, int start, int middle)
-{
-	if (middle < start)
-		return;
-	binaryTree->Insert(begin[middle]);
-	createLeft(binaryTree, begin, start, --middle);
-}
-
-void createRight(BinaryTree* binaryTree, int* begin, int end, int middle)
-{
-	if (middle > end)
-		return;
-	binaryTree->Insert(begin[middle]);
-	createRight(binaryTree, begin, end, ++middle);
-}
+BinaryTree* binaryTree;
 
 void CreateMinimalBST(int* begin, int start, int end)
 {
-	int lenght = end - start + 1;
-	int indexHead = start + (lenght / 2);
-	BinaryTree* binaryTree = new BinaryTree(begin[indexHead]);
-	createLeft(binaryTree, begin, start, --indexHead);
-	createRight(binaryTree, begin, end, ++indexHead);
-	for (int i = start; i < end; i++)
+	int middle = (start + end) / 2;
+	while (middle > start)
 	{
-		cout << binaryTree->Search(begin[i])->getValue() << endl;
+		if (!binaryTree->Search(begin[--middle]))
+			binaryTree->Insert(begin[middle]);
+		CreateMinimalBST(begin, start, middle);
+	}
+	while (middle < end)
+	{
+		if (!binaryTree->Search(begin[++middle]))
+			binaryTree->Insert(begin[middle]);
+		CreateMinimalBST(begin, middle, end);
 	}
 }
 
@@ -37,6 +27,11 @@ int main()
 	int arr[] = {5, 6, 7, 8, 9, 10, 11, 12};
 	int* beginArr = begin(arr);
 	int start = 2;
-	int end = 8;
+	int end = 7;
+	binaryTree = new BinaryTree(beginArr[(start + end) / 2]);
 	CreateMinimalBST(beginArr, start, end);
+	for (int i = start; i <= end; i++)
+	{
+		cout << binaryTree->Search(beginArr[i])->getValue() << endl;
+	}
 }
