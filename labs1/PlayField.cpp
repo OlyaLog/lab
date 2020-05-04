@@ -8,7 +8,7 @@ using namespace std;
 vector < PlayField::CellPos > PlayField::getEmptyCells()
 {
 	vector<CellPos> emptyCell;
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < count * count; i++)
 	{
 		if (cellsState[i] == csEmpty)
 		{
@@ -30,35 +30,49 @@ PlayField PlayField::makeMove(CellPos cellPos)
 	return field;
 }
 
+bool PlayField::checkHorizontal(Cells cell)
+{
+	for (int i = 0; i < count; i++)
+	{
+		return cellsState[i * 3] == cellsState[1 + i * 3] && cellsState[i * 3] == cellsState[2 + i * 3] && cellsState[i * 3] == cell;
+	}
+}
+
+bool PlayField::checkVertical(Cells cell)
+{
+	for (int i = 0; i < count; i++)
+	{
+		return cellsState[i] == cellsState[i + 3] && cellsState[i] == cellsState[i + 6] && cellsState[i] == cell;
+	}
+}
+
+bool PlayField::checkDiagonals(Cells cell)
+{
+	return cellsState[0] == cellsState[count + 1] && cellsState[0] == cellsState[count * count - 1] && cellsState[0] == cell ||
+		cellsState[count - 1] == cellsState[count + 1] && cellsState[count - 1] == cellsState[count * 2] && cellsState[count - 1] == cell;
+}
+
+bool PlayField::checkStatusWin(Cells cell)
+{
+	if (checkHorizontal(cell))
+		return true;
+	if (checkVertical(cell))
+		return true;
+	if (checkDiagonals(cell))
+		return true;
+}
+
 PlayField::Status PlayField::checkFieldStatus()
 {
-	for (int i = 0; i < 3; i++)
-	{
-		if (cellsState[i] == cellsState[i + 3] && cellsState[i] == cellsState[i + 6] && cellsState[i] != csEmpty)
-		{
-			if (cellsState[i] == csCross)
-				return fsCrossesWin;
-			return fsNoughtsWin;
-		}
-		if (cellsState[i * 3] == cellsState[1 + i * 3] && cellsState[i * 3] == cellsState[2 + i * 3] && cellsState[i * 3] != csEmpty)
-		{
-			if (cellsState[i] == csCross)
-				return fsCrossesWin;
-			return fsNoughtsWin;
-		}
-		if (i == 0 && cellsState[i] == cellsState[i+4] && cellsState[i] == cellsState[i+8] && cellsState[i] != csEmpty 
-			|| i == 2 && cellsState[i] == cellsState[i + 2] && cellsState[i] == cellsState[i + 4] && cellsState[i] != csEmpty)
-		{
-			if (cellsState[i] == csCross)
-				return fsCrossesWin;
-			return fsNoughtsWin;
-		}
-	}
+	if (checkStatusWin(csCross))
+		return fsCrossesWin;
+	if (checkStatusWin(csNought))
+		return fsNoughtsWin;
 	if (getEmptyCells().empty())
 		return fsDraw;
 	int cross = 0;
 	int nought = 0;
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < count * count; i++)
 	{
 		if (operator[](CellPos::GetCellPos(i)) == csCross)
 			cross++;

@@ -9,9 +9,23 @@
 
 using namespace std;
 
-int noughtWinCount = 0;
-int crossWinCount = 0;
-int drawCount = 0;
+struct Result
+{
+	int noughtWinCount;
+	int crossWinCount;
+	int drawCount;
+	
+	Result& operator+=(const Result& ir)
+	{
+		noughtWinCount += ir.noughtWinCount;
+		crossWinCount += ir.crossWinCount;
+		drawCount += ir.drawCount;
+		return *this;
+	}
+};
+
+Result result;
+Result total;
 
 void drawCell(PlayField:: Cells cell)
 {
@@ -32,11 +46,10 @@ void drawCell(PlayField:: Cells cell)
 void drawField(PlayField playField)
 {
 	cout << " -------------" << endl;
-	for (int i = 0; i <= 2; i++)
+	for (int i = 0; i < PlayField::count; i++)
 	{
-		for (int j = 0; j <= 2; j++)
+		for (int j = 0; j < PlayField::count; j++)
 		{
-			//cout << " | ";
 			drawCell(playField.cellsState[PlayField::CellPos(i, j).GetPos()]);
 		}
 		cout << " | " << endl;
@@ -62,13 +75,13 @@ int buildTree(PlayField playField, TreeNode treeNode)
 			switch (newField.checkFieldStatus())
 			{
 			case PlayField::fsNoughtsWin:
-				noughtWinCount++;
+				result.noughtWinCount++;
 				break;
 			case PlayField::fsCrossesWin:
-				crossWinCount++;
+				result.crossWinCount++;
 				break;
 			case PlayField::fsDraw:
-				drawCount++;
+				result.drawCount++;
 				break;
 			}
 			return 0;
@@ -94,15 +107,21 @@ void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell)
 int main()
 {
 	PlayField playField;
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < PlayField::count * PlayField::count; i++)
 	{
 		playField.cellsState[i] = PlayField::csNought;
 		drawField(playField);
 		TreeNode treeRoot = TreeNode(playField, nullptr);
 		buildTree(playField, treeRoot);
-		cout << "Nought win: " << noughtWinCount << endl;
-		cout << "Cross win: " << crossWinCount << endl;
-		cout << "Drow: " << drawCount << endl;
+		cout << "Nought win: " << result.noughtWinCount << endl;
+		cout << "Cross win: " << result.crossWinCount << endl;
+		cout << "Drow: " << result.drawCount << endl;
 		playField.cellsState[i] = PlayField::csEmpty;
+		total += result;
+		result = { 0, 0,0 };
 	}
+	cout << "Total: " << endl;
+	cout << "Nought win: " << total.noughtWinCount << endl;
+	cout << "Cross win: " << total.crossWinCount << endl;
+	cout << "Drow: " << total.drawCount << endl;
 }

@@ -8,6 +8,7 @@ using namespace std;
 class PlayField
 {
 public:
+	static constexpr int count = 3;
 	enum Cells
 	{
 		csEmpty,
@@ -28,20 +29,20 @@ public:
 	public:
 		static CellPos GetCellPos(int pos)
 		{
-			assert(pos >= 0 || pos <= 8);
+			assert(pos >= 0 || pos < count * count);
 			int i = 0;
 			int j = 0;
-			i = pos / 3;
-			j = pos % 3;
+			i = pos / count;
+			j = pos % count;
 			return CellPos(i, j);
 		}
 
 		CellPos(int i, int j)
 		{
-			assert(i >= 0 || j >= 0 || i <= 2 || j <= 2);
+			assert(i >= 0 || j >= 0 || i < count || j < count);
 			x = i;
 			y = j;
-			cellPos = x * 3 + y;
+			cellPos = x * count + y;
 		}
 
 		int GetPos() { return cellPos; }
@@ -58,9 +59,13 @@ public:
 	vector <CellPos> getEmptyCells();
 	Status checkFieldStatus();
 	PlayField makeMove(CellPos);
-	Cells cellsState[9]{ csEmpty,csEmpty,csEmpty,csEmpty,csEmpty,csEmpty,csEmpty,csEmpty,csEmpty };
+	Cells cellsState[count * count]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
 
 private:
 	PlayField operator+ (CellPos);
 	Cells newCell = csNought;
+	bool checkStatusWin(Cells);
+	bool checkHorizontal(Cells);
+	bool checkVertical(Cells);
+	bool checkDiagonals(Cells);
 };
