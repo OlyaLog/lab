@@ -14,7 +14,7 @@ struct Result
 	int noughtWinCount;
 	int crossWinCount;
 	int drawCount;
-	
+
 	Result& operator+=(const Result& ir)
 	{
 		noughtWinCount += ir.noughtWinCount;
@@ -27,7 +27,7 @@ struct Result
 Result result;
 Result total;
 
-void drawCell(PlayField:: Cells cell)
+void drawCell(PlayField::Cells cell)
 {
 	switch (cell)
 	{
@@ -46,9 +46,9 @@ void drawCell(PlayField:: Cells cell)
 void drawField(PlayField playField)
 {
 	cout << " -------------" << endl;
-	for (int i = 0; i < PlayField::count; i++)
+	for (int i = 0; i < PlayField::fieldSize; i++)
 	{
-		for (int j = 0; j < PlayField::count; j++)
+		for (int j = 0; j < PlayField::fieldSize; j++)
 		{
 			drawCell(playField.cellsState[PlayField::CellPos(i, j).GetPos()]);
 		}
@@ -107,7 +107,7 @@ void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell)
 int main()
 {
 	PlayField playField;
-	for (int i = 0; i < PlayField::count * PlayField::count; i++)
+	for (int i = 0; i < PlayField::fieldSize * PlayField::fieldSize; i++)
 	{
 		playField.cellsState[i] = PlayField::csNought;
 		drawField(playField);
