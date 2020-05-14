@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <vector>
 #include <cassert>
 
@@ -8,7 +7,7 @@ using namespace std;
 class PlayField
 {
 public:
-	static constexpr int count = 3;
+	static constexpr int fieldSize = 3;
 	enum Cells
 	{
 		csEmpty,
@@ -29,37 +28,31 @@ public:
 	public:
 		static CellPos GetCellPos(int pos)
 		{
-			assert(pos >= 0 || pos < count * count);
-			int i = 0;
-			int j = 0;
-			i = pos / count;
-			j = pos % count;
-			return CellPos(i, j);
+			assert(pos >= 0 || pos < fieldSize * fieldSize);
+			return CellPos(pos / fieldSize, pos % fieldSize);
 		}
 
 		CellPos(int i, int j)
 		{
-			assert(i >= 0 || j >= 0 || i < count || j < count);
+			assert(i >= 0 || j >= 0 || i <= fieldSize - 1 || j <= fieldSize - 1);
 			x = i;
 			y = j;
-			cellPos = x * count + y;
 		}
 
-		int GetPos() { return cellPos; }
+		int GetPos() { return x * fieldSize + y; }
 		int GetX() { return x; }
 		int GetY() { return y; }
 
 	private:
 		int x;
 		int y;
-		int cellPos;
 	};
 
-	Cells operator[] (CellPos);
+	Cells operator[] (CellPos) const;
 	vector <CellPos> getEmptyCells();
 	Status checkFieldStatus();
 	PlayField makeMove(CellPos);
-	Cells cellsState[count * count]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
+	Cells cellsState[fieldSize * fieldSize]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
 
 private:
 	PlayField operator+ (CellPos);
