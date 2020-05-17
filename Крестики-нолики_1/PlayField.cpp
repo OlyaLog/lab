@@ -5,7 +5,7 @@
 
 using namespace std;
 
-vector < PlayField::CellPos > PlayField::getEmptyCells()
+vector < PlayField::CellPos > PlayField::getEmptyCells() const
 {
 	vector<CellPos> emptyCell;
 	for (int i = 0; i < fieldSize * fieldSize; i++)
@@ -30,7 +30,7 @@ PlayField PlayField::makeMove(CellPos cellPos)
 	return field;
 }
 
-bool PlayField::checkHorizontal(Cells cell)
+bool PlayField::checkHorizontal(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
@@ -38,7 +38,7 @@ bool PlayField::checkHorizontal(Cells cell)
 	}
 }
 
-bool PlayField::checkVertical(Cells cell)
+bool PlayField::checkVertical(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
@@ -46,13 +46,13 @@ bool PlayField::checkVertical(Cells cell)
 	}
 }
 
-bool PlayField::checkDiagonals(Cells cell)
+bool PlayField::checkDiagonals(Cells cell) const
 {
 	return cellsState[0] == cellsState[fieldSize + 1] && cellsState[0] == cellsState[fieldSize * fieldSize - 1] && cellsState[0] == cell ||
 		cellsState[fieldSize - 1] == cellsState[fieldSize + 1] && cellsState[fieldSize - 1] == cellsState[fieldSize * 2] && cellsState[fieldSize - 1] == cell;
 }
 
-bool PlayField::checkStatusWin(Cells cell)
+bool PlayField::checkStatusWin(Cells cell) const
 {
 	if (checkHorizontal(cell))
 		return true;
@@ -62,7 +62,7 @@ bool PlayField::checkStatusWin(Cells cell)
 		return true;
 }
 
-PlayField::Status PlayField::checkFieldStatus()
+PlayField::Status PlayField::checkFieldStatus() const
 {
 	if (checkStatusWin(csCross))
 		return fsCrossesWin;

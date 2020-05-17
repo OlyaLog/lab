@@ -49,16 +49,16 @@ public:
 	};
 
 	Cells operator[] (CellPos) const;
-	vector <CellPos> getEmptyCells();
-	Status checkFieldStatus();
+	vector <CellPos> getEmptyCells() const;
+	Status checkFieldStatus() const;
 	PlayField makeMove(CellPos);
 	Cells cellsState[fieldSize * fieldSize]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
 
 private:
 	PlayField operator+ (CellPos);
 	Cells newCell = csNought;
-	bool checkStatusWin(Cells);
-	bool checkHorizontal(Cells);
-	bool checkVertical(Cells);
-	bool checkDiagonals(Cells);
+	bool checkStatusWin(Cells) const;
+	bool checkHorizontal(Cells) const;
+	bool checkVertical(Cells) const;
+	bool checkDiagonals(Cells) const;
 };

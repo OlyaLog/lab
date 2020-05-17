@@ -5,9 +5,9 @@
 
 using namespace std;
 
-bool TreeNode::isTerminal(TreeNode treeNode)
+bool TreeNode::isTerminal(TreeNode treeNode) const
 {
-	return childQty(treeNode) == 0 || treeNode.field.checkFieldStatus() != PlayField::fsNormal;
+	return childQty(treeNode) == 0 || treeNode.field->checkFieldStatus() != PlayField::fsNormal;
 }
 
 void TreeNode::addChild(TreeNode* treeNode, TreeNode* child)
@@ -18,7 +18,7 @@ void TreeNode::addChild(TreeNode* treeNode, TreeNode* child)
 	node.children.push_back(child);
 }
 
-TreeNode& TreeNode::operator[](int pos)
+TreeNode& TreeNode::operator[](int pos) const
 {
 	return *children[pos];
 }
@@ -30,10 +30,10 @@ int TreeNode::childCount(TreeNode treeNode)
 
 const PlayField& TreeNode::value(TreeNode treeNode)
 {
-	return treeNode.field;
+	return *treeNode.field;
 }
 
-int TreeNode::childQty(TreeNode treeNode)
+int TreeNode::childQty(TreeNode treeNode) const
 {
-	return treeNode.field.getEmptyCells().size();
+	return treeNode.field->getEmptyCells().size();
 }
