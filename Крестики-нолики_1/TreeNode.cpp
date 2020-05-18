@@ -7,15 +7,15 @@ using namespace std;
 
 bool TreeNode::isTerminal(TreeNode treeNode) const
 {
-	return childQty(treeNode) == 0 || treeNode.field->checkFieldStatus() != PlayField::fsNormal;
+	return childQty(treeNode) == 0 || treeNode.node->field.checkFieldStatus() != PlayField::fsNormal;
 }
 
 void TreeNode::addChild(TreeNode* treeNode, TreeNode* child)
 {
 	assert(childQty(*treeNode) != 0);
-	child->treeNode = treeNode;
-	TreeNode node = *treeNode;
-	node.children.push_back(child);
+	child->node->treeNode = treeNode;
+	TreeNode tree = *treeNode;
+	tree.children.push_back(child);
 }
 
 TreeNode& TreeNode::operator[](int pos) const
@@ -30,10 +30,10 @@ int TreeNode::childCount(TreeNode treeNode)
 
 const PlayField& TreeNode::value(TreeNode treeNode)
 {
-	return *treeNode.field;
+	return treeNode.node->field;
 }
 
 int TreeNode::childQty(TreeNode treeNode) const
 {
-	return treeNode.field->getEmptyCells().size();
+	return treeNode.node->field.getEmptyCells().size();
 }
