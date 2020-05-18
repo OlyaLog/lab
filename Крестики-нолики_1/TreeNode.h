@@ -7,10 +7,7 @@ using namespace std;
 class TreeNode
 {
 public:
-	TreeNode(PlayField newField, TreeNode* newTreeNode)
-	{
-		node = new Node{ newTreeNode, newField };
-	}
+	TreeNode(PlayField newField, TreeNode* newTreeNode): treeNode(newTreeNode), field(newField){}
 	bool isTerminal(TreeNode) const;
 	void addChild(TreeNode*, TreeNode*);
 	TreeNode& operator[] (int) const;
@@ -19,12 +16,8 @@ public:
 	int GetChild(TreeNode treeNode) { return childQty(treeNode); };
 	
 private:
-	struct Node
-	{
-		TreeNode* treeNode;
-		const PlayField field;
-	};
-	Node* node;
+	TreeNode* treeNode;
+	const PlayField field;
 	int childQty(TreeNode) const;
 	vector<TreeNode*> children;
 };
