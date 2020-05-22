@@ -1,8 +1,6 @@
 #pragma once
-#include <vector>
 #include <cassert>
-
-using namespace std;
+#include <vector>
 
 class PlayField
 {
@@ -26,12 +24,6 @@ public:
 	class CellPos
 	{
 	public:
-		static CellPos GetCellPos(int pos)
-		{
-			assert(pos >= 0 || pos < fieldSize * fieldSize);
-			return CellPos(pos / fieldSize, pos % fieldSize);
-		}
-
 		CellPos(int i, int j)
 		{
 			assert(i >= 0 || j >= 0 || i <= fieldSize - 1 || j <= fieldSize - 1);
@@ -39,9 +31,9 @@ public:
 			y = j;
 		}
 
-		int GetPos() { return x * fieldSize + y; }
-		int GetX() { return x; }
-		int GetY() { return y; }
+		int GetPos() const { return x * fieldSize + y; }
+		int GetX() const { return x; }
+		int GetY() const { return y; }
 
 	private:
 		int x;
@@ -49,14 +41,13 @@ public:
 	};
 
 	Cells operator[] (CellPos) const;
-	vector <CellPos> getEmptyCells() const;
+	std::vector<CellPos> getEmptyCells() const;
 	Status checkFieldStatus() const;
 	PlayField makeMove(CellPos);
-	Cells cellsState[fieldSize * fieldSize]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
 
 private:
 	PlayField operator+ (CellPos);
-	Cells newCell = csNought;
+	Cells cellsState[fieldSize * fieldSize]{ csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty, csEmpty };
 	bool checkStatusWin(Cells) const;
 	bool checkHorizontal(Cells) const;
 	bool checkVertical(Cells) const;

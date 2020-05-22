@@ -1,11 +1,6 @@
-﻿// ConsoleApplication1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
-#include <vector>
-#include "PlayField.h"
-#include "TreeNode.h"
+﻿#include <iostream>
 #include <string>
+#include "TreeNode.h"
 
 using namespace std;
 
@@ -25,7 +20,6 @@ struct Result
 };
 
 Result result;
-Result total;
 
 void drawCell(PlayField::Cells cell)
 {
@@ -50,7 +44,7 @@ void drawField(PlayField playField)
 	{
 		for (int j = 0; j < PlayField::fieldSize; j++)
 		{
-			drawCell(playField.cellsState[PlayField::CellPos(i, j).GetPos()]);
+			drawCell(playField[PlayField::CellPos(i, j)]);
 		}
 		cout << " | " << endl;
 		cout << " -------------" << endl;
@@ -59,13 +53,14 @@ void drawField(PlayField playField)
 
 void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell);
 
-int buildTree(PlayField playField, TreeNode treeNode)
+void buildSubTree(PlayField playField, TreeNode treeNode)
 {
 	if (!treeNode.isTerminal(treeNode))
 	{
-		if (treeNode.GetChild(treeNode) % 2 == 0)
+		if (treeNode.childCount(treeNode) % 2 == 0)
 			walkTree(treeNode, playField, PlayField::Cells::csNought);
-		else walkTree(treeNode, playField, PlayField::Cells::csCross);
+		else 
+			walkTree(treeNode, playField, PlayField::Cells::csCross);
 	}
 	else
 	{
@@ -84,41 +79,50 @@ int buildTree(PlayField playField, TreeNode treeNode)
 				result.drawCount++;
 				break;
 			}
-			return 0;
 		}
 	}
 }
 
 void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell)
 {
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < PlayField::fieldSize; i++)
 	{
-		PlayField newField = treeNode.value(treeNode);
-		if (newField.cellsState[i] == PlayField::Cells::csEmpty)
+		for (int j = 0; j < PlayField::fieldSize; j++)
 		{
-			PlayField move = newField.makeMove(PlayField::CellPos::GetCellPos(i));
-			TreeNode childNode = TreeNode(move, &treeNode);
-			treeNode.addChild(&treeNode, &childNode);
-			buildTree(newField, childNode);
+			PlayField newField = treeNode.value(treeNode);
+			PlayField::CellPos pos = PlayField::CellPos(i, j);
+			for (auto empty: newField.getEmptyCells())
+			{
+				if (empty.GetPos() == pos.GetPos())
+				{
+					PlayField move = newField.makeMove(pos);
+					TreeNode childNode = TreeNode(move, &treeNode);
+					treeNode.addChild(&childNode);
+					buildSubTree(newField, childNode);
+				}
+			}
 		}
 	}
 }
 
 int main()
 {
-	PlayField playField;
-	for (int i = 0; i < PlayField::fieldSize * PlayField::fieldSize; i++)
+	Result total = {0,0,0};
+	for (int i = 0; i < PlayField::fieldSize; i++)
 	{
-		playField.cellsState[i] = PlayField::csNought;
-		drawField(playField);
-		TreeNode treeRoot = TreeNode(playField, nullptr);
-		buildTree(playField, treeRoot);
-		cout << "Nought win: " << result.noughtWinCount << endl;
-		cout << "Cross win: " << result.crossWinCount << endl;
-		cout << "Drow: " << result.drawCount << endl;
-		playField.cellsState[i] = PlayField::csEmpty;
-		total += result;
-		result = { 0, 0,0 };
+		for (int j = 0; j < PlayField::fieldSize; j++)
+		{
+			PlayField playField;
+			playField.makeMove(PlayField::CellPos(i, j));
+			drawField(playField);
+			TreeNode treeRoot = TreeNode(playField, nullptr);
+			buildSubTree(playField, treeRoot);
+			cout << "Nought win: " << result.noughtWinCount << endl;
+			cout << "Cross win: " << result.crossWinCount << endl;
+			cout << "Drow: " << result.drawCount << endl;
+			total += result;
+			result = { 0, 0,0 };
+		}
 	}
 	cout << "Total: " << endl;
 	cout << "Nought win: " << total.noughtWinCount << endl;

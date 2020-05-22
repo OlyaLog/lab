@@ -2,22 +2,23 @@
 #include <vector>
 #include "PlayField.h"
 
-using namespace std;
-
 class TreeNode
 {
 public:
-	TreeNode(PlayField newField, TreeNode* newTreeNode): treeNode(newTreeNode), field(newField){}
+	TreeNode(PlayField newField, TreeNode* newTreeNode): parent(newTreeNode), field(newField){}
+	~TreeNode()
+	{
+		this->children.clear();
+	}
 	bool isTerminal(TreeNode) const;
-	void addChild(TreeNode*, TreeNode*);
+	void addChild(TreeNode*);
 	TreeNode& operator[] (int) const;
-	int childCount(TreeNode);
-	const PlayField& value(TreeNode);
-	int GetChild(TreeNode treeNode) { return childQty(treeNode); };
+	int childCount(TreeNode) const;
+	const PlayField& value(TreeNode) const;
 	
 private:
-	TreeNode* treeNode;
+	const TreeNode* parent;
 	const PlayField field;
-	int childQty(TreeNode) const;
-	vector<TreeNode*> children;
+	int childQty() const;
+	std::vector<TreeNode*> children;
 };

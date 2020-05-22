@@ -5,15 +5,18 @@
 
 using namespace std;
 
-vector < PlayField::CellPos > PlayField::getEmptyCells() const
+vector<PlayField::CellPos> PlayField::getEmptyCells() const
 {
 	vector<CellPos> emptyCell;
-	for (int i = 0; i < fieldSize * fieldSize; i++)
+	for (int i = 0; i < fieldSize; i++)
 	{
-		if (cellsState[i] == csEmpty)
+		for (int j = 0; j < fieldSize; j++)
 		{
-			CellPos cell = CellPos::GetCellPos(i);
-			emptyCell.push_back(cell);
+			if (cellsState[CellPos(i,j).GetPos()] == csEmpty)
+			{
+				CellPos cell = CellPos(i,j);
+				emptyCell.push_back(cell);
+			}
 		}
 	}
 	return emptyCell;
@@ -21,20 +24,14 @@ vector < PlayField::CellPos > PlayField::getEmptyCells() const
 
 PlayField PlayField::makeMove(CellPos cellPos)
 {
-	if (newCell == PlayField::csNought)
-		newCell = PlayField::csCross;
-	else newCell = PlayField::csNought;
-	PlayField field = *this;
-	assert(cellsState[cellPos.GetPos()] == csEmpty || checkFieldStatus() == fsNormal);
-	field.cellsState[cellPos.GetPos()] = newCell;
-	return field;
+	return operator+(cellPos);
 }
 
 bool PlayField::checkHorizontal(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
-		return cellsState[i * 3] == cellsState[1 + i * 3] && cellsState[i * 3] == cellsState[2 + i * 3] && cellsState[i * 3] == cell;
+		return cellsState[i * fieldSize] == cellsState[1 + i * fieldSize] && cellsState[i * fieldSize] == cellsState[2 + i * fieldSize] && cellsState[i * fieldSize] == cell;
 	}
 }
 
@@ -42,7 +39,7 @@ bool PlayField::checkVertical(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
-		return cellsState[i] == cellsState[i + 3] && cellsState[i] == cellsState[i + 6] && cellsState[i] == cell;
+		return cellsState[i] == cellsState[i + fieldSize] && cellsState[i] == cellsState[i + 2 * fieldSize] && cellsState[i] == cell;
 	}
 }
 
@@ -64,24 +61,32 @@ bool PlayField::checkStatusWin(Cells cell) const
 
 PlayField::Status PlayField::checkFieldStatus() const
 {
+	Status result = fsNormal;
 	if (checkStatusWin(csCross))
-		return fsCrossesWin;
+		result = fsCrossesWin;
 	if (checkStatusWin(csNought))
+	{
+		if (result == fsCrossesWin)
+			return fsInvalid;
 		return fsNoughtsWin;
-	if (getEmptyCells().empty())
+	}
+	if (getEmptyCells().empty() && result != fsCrossesWin)
 		return fsDraw;
 	int cross = 0;
 	int nought = 0;
-	for (int i = 0; i < fieldSize * fieldSize; i++)
+	for (int i = 0; i < fieldSize; i++)
 	{
-		if (operator[](CellPos::GetCellPos(i)) == csCross)
-			cross++;
-		if (operator[](CellPos::GetCellPos(i)) == csNought)
-			nought++;
+		for (int j = 0; j < fieldSize; j++)
+		{
+			if (this->operator[](CellPos(i,j)) == csCross)
+				cross++;
+			if (this->operator[](CellPos(i,j)) == csNought)
+				nought++;
+		}
 	}
-	if (abs(cross - nought) > 1)
+	if (nought - cross > 1 || cross - nought > 0)
 		return fsInvalid;
-	return fsNormal;
+	return result;
 }
 
 PlayField::Cells PlayField::operator[](CellPos cellPos) const
@@ -91,6 +96,24 @@ PlayField::Cells PlayField::operator[](CellPos cellPos) const
 
 PlayField PlayField::operator+(CellPos cellPos)
 {
-	makeMove(cellPos);
+	assert(cellsState[cellPos.GetPos()] == csEmpty || checkFieldStatus() == fsNormal);
+	Cells newCell;
+	int cross = 0;
+	int nought = 0;
+	for (int i = 0; i < fieldSize; i++)
+	{
+		for (int j = 0; j < fieldSize; j++)
+		{
+			if (operator[](CellPos(i, j)) == csCross)
+				cross++;
+			if (operator[](CellPos(i, j)) == csNought)
+				nought++;
+		}
+	}
+	if (nought - cross == 1)
+		newCell = csCross;
+	else
+		newCell = csNought;
+	this->cellsState[cellPos.GetPos()] = newCell;
 	return *this;
 }
