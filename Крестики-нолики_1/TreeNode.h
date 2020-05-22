@@ -6,15 +6,12 @@ class TreeNode
 {
 public:
 	TreeNode(PlayField newField, TreeNode* newTreeNode): parent(newTreeNode), field(newField){}
-	~TreeNode()
-	{
-		this->children.clear();
-	}
-	bool isTerminal(TreeNode) const;
+	~TreeNode();
+	bool isTerminal() const;
 	void addChild(TreeNode*);
 	TreeNode& operator[] (int) const;
-	int childCount(TreeNode) const;
-	const PlayField& value(TreeNode) const;
+	int childCount() const;
+	const PlayField& value() const;
 	
 private:
 	const TreeNode* parent;

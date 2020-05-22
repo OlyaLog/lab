@@ -51,20 +51,17 @@ void drawField(PlayField playField)
 	}
 }
 
-void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell);
+void walkTree(TreeNode& treeNode);
 
-void buildSubTree(PlayField playField, TreeNode treeNode)
+void buildSubTree(TreeNode& treeNode)
 {
-	if (!treeNode.isTerminal(treeNode))
+	if (!treeNode.isTerminal())
 	{
-		if (treeNode.childCount(treeNode) % 2 == 0)
-			walkTree(treeNode, playField, PlayField::Cells::csNought);
-		else 
-			walkTree(treeNode, playField, PlayField::Cells::csCross);
+		walkTree(treeNode);
 	}
 	else
 	{
-		PlayField newField = treeNode.value(treeNode);
+		PlayField newField = treeNode.value();
 		if (newField.checkFieldStatus() != PlayField::fsNormal)
 		{
 			switch (newField.checkFieldStatus())
@@ -83,13 +80,13 @@ void buildSubTree(PlayField playField, TreeNode treeNode)
 	}
 }
 
-void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell)
+void walkTree(TreeNode& treeNode)
 {
 	for (int i = 0; i < PlayField::fieldSize; i++)
 	{
 		for (int j = 0; j < PlayField::fieldSize; j++)
 		{
-			PlayField newField = treeNode.value(treeNode);
+			PlayField newField = treeNode.value();
 			PlayField::CellPos pos = PlayField::CellPos(i, j);
 			for (auto empty: newField.getEmptyCells())
 			{
@@ -97,8 +94,7 @@ void walkTree(TreeNode treeNode, PlayField playField, PlayField::Cells newCell)
 				{
 					PlayField move = newField.makeMove(pos);
 					TreeNode childNode = TreeNode(move, &treeNode);
-					treeNode.addChild(&childNode);
-					buildSubTree(newField, childNode);
+					buildSubTree(childNode);
 				}
 			}
 		}
@@ -116,7 +112,7 @@ int main()
 			playField.makeMove(PlayField::CellPos(i, j));
 			drawField(playField);
 			TreeNode treeRoot = TreeNode(playField, nullptr);
-			buildSubTree(playField, treeRoot);
+			buildSubTree(treeRoot);
 			cout << "Nought win: " << result.noughtWinCount << endl;
 			cout << "Cross win: " << result.crossWinCount << endl;
 			cout << "Drow: " << result.drawCount << endl;

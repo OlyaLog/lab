@@ -5,14 +5,22 @@
 
 using namespace std;
 
-bool TreeNode::isTerminal(TreeNode treeNode) const
+TreeNode::~TreeNode()
 {
-	return treeNode.field.checkFieldStatus() == PlayField::fsCrossesWin || treeNode.field.checkFieldStatus() == PlayField::fsNoughtsWin || treeNode.field.checkFieldStatus() == PlayField::fsDraw;
+	for (unsigned int i = 0; i < this->children.size(); i++)
+	{
+		delete children[i];
+	}
+}
+
+bool TreeNode::isTerminal() const
+{
+	return this->field.checkFieldStatus() == PlayField::fsCrossesWin || this->field.checkFieldStatus() == PlayField::fsNoughtsWin || this->field.checkFieldStatus() == PlayField::fsDraw;
 }
 
 void TreeNode::addChild(TreeNode* child)
 {
-	assert(childCount(*this) < this->childQty());
+	assert(this->childCount() < this->childQty());
 	child->parent = this;
 	this->children.push_back(child);
 }
@@ -22,21 +30,19 @@ TreeNode& TreeNode::operator[](int pos) const
 	return *children[pos];
 }
 
-int TreeNode::childCount(TreeNode treeNode) const
+int TreeNode::childCount() const
 {
-	return treeNode.children.size();
+	return this->children.size();
 }
 
-const PlayField& TreeNode::value(TreeNode treeNode) const
+const PlayField& TreeNode::value() const
 {
-	return treeNode.field;
+	return this->field;
 }
 
 int TreeNode::childQty() const
 {
-	int childQ = PlayField::fieldSize * PlayField::fieldSize;
-	if (this->parent != nullptr)
-		childQ = this->parent->childQty() - 1;
-	assert(childQ != this->field.getEmptyCells().size());
-	return childQ;
+	if (!this->parent)
+		return PlayField::fieldSize * PlayField::fieldSize;;
+	return this->parent->childQty() - 1;
 }
