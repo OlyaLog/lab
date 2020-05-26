@@ -29,7 +29,7 @@ vector<PlayField::CellPos> PlayField::getEmptyCells() const
 
 PlayField PlayField::makeMove(CellPos cellPos)
 {
-	return operator+(cellPos);
+	return (*this)+cellPos;
 }
 
 bool PlayField::checkHorizontal(Cells cell) const

@@ -19,8 +19,6 @@ struct Result
 	}
 };
 
-Result result;
-
 void drawCell(PlayField::Cells cell)
 {
 	switch (cell)
@@ -55,7 +53,7 @@ void buildSubTree(TreeNode& treeNode)
 {
 	if (!treeNode.isTerminal())
 	{
-		PlayField newField = treeNode.value();
+		const PlayField newField = treeNode.value();
 		for (auto empty : newField.getEmptyCells())
 		{
 			PlayField move = newField;
@@ -68,7 +66,7 @@ void buildSubTree(TreeNode& treeNode)
 	
 }
 
-void walkTree(TreeNode& treeNode)
+void walkTree(TreeNode& treeNode, Result& result)
 {
 	if (treeNode.childCount() == 0)
 	{
@@ -87,7 +85,7 @@ void walkTree(TreeNode& treeNode)
 	}
 	for (int i = 0; i < treeNode.childCount(); i++)
 	{
-		walkTree(treeNode[i]);
+		walkTree(treeNode[i], result);
 	}
 }
 
@@ -99,13 +97,13 @@ int main()
 	Result total = { 0,0,0 };
 	for (int i = 0; i < treeRoot.childCount(); i++)
 	{
+		Result result = { 0,0,0 };
 		drawField(treeRoot[i].value());
-		walkTree(treeRoot[i]);
+		walkTree(treeRoot[i], result);
 		cout << "Nought win: " << result.noughtWinCount << endl;
 		cout << "Cross win: " << result.crossWinCount << endl;
 		cout << "Drow: " << result.drawCount << endl;
 		total += result;
-		result = { 0, 0,0 };
 	}
 	cout << "Total: " << endl;
 	cout << "Nought win: " << total.noughtWinCount << endl;

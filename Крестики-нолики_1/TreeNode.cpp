@@ -3,21 +3,20 @@
 
 TreeNode::TreeNode(PlayField newField, TreeNode* newTreeNode): parent(newTreeNode), field(newField)
 {
-	if (parent != nullptr)
+	if (parent)
 		parent->addChild(this);
 }
 
 TreeNode::~TreeNode()
 {
 	for (unsigned int i = 0; i < this->children.size(); i++)
-	{
 		delete children[i];
-	}
 }
 
 bool TreeNode::isTerminal() const
 {
-	return this->field.checkFieldStatus() == PlayField::fsCrossesWin || this->field.checkFieldStatus() == PlayField::fsNoughtsWin || this->field.checkFieldStatus() == PlayField::fsDraw;
+	const PlayField::Status fieldStatus = field.checkFieldStatus();
+	return fieldStatus == PlayField::fsCrossesWin || fieldStatus == PlayField::fsNoughtsWin || fieldStatus == PlayField::fsDraw;
 }
 
 void TreeNode::addChild(TreeNode* child)
@@ -34,17 +33,17 @@ TreeNode& TreeNode::operator[](int pos) const
 
 int TreeNode::childCount() const
 {
-	return this->children.size();
+	return children.size();
 }
 
 const PlayField& TreeNode::value() const
 {
-	return this->field;
+	return field;
 }
 
 int TreeNode::childQty() const
 {
-	if (!this->parent)
-		return PlayField::fieldSize * PlayField::fieldSize;;
-	return this->parent->childQty() - 1;
+	if (this->parent)
+		return this->parent->childQty() - 1;
+	return PlayField::fieldSize * PlayField::fieldSize;
 }
