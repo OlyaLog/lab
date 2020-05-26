@@ -1,9 +1,11 @@
 #include "TreeNode.h"
-#include "PlayField.h"
-#include <iostream>
-#include <vector>
+#include <cassert>
 
-using namespace std;
+TreeNode::TreeNode(PlayField newField, TreeNode* newTreeNode): parent(newTreeNode), field(newField)
+{
+	if (parent != nullptr)
+		parent->addChild(this);
+}
 
 TreeNode::~TreeNode()
 {

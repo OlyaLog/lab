@@ -1,5 +1,4 @@
 #pragma once
-#include <cassert>
 #include <vector>
 
 class PlayField
@@ -24,13 +23,7 @@ public:
 	class CellPos
 	{
 	public:
-		CellPos(int i, int j)
-		{
-			assert(i >= 0 || j >= 0 || i <= fieldSize - 1 || j <= fieldSize - 1);
-			x = i;
-			y = j;
-		}
-
+		CellPos(int i, int j);
 		int GetPos() const { return x * fieldSize + y; }
 		int GetX() const { return x; }
 		int GetY() const { return y; }
@@ -53,3 +46,4 @@ private:
 	bool checkVertical(Cells) const;
 	bool checkDiagonals(Cells) const;
 };
+

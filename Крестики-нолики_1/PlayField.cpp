@@ -1,9 +1,14 @@
 #include "PlayField.h"
-#include <iostream>
-#include <vector>
 #include <cassert>
 
 using namespace std;
+
+PlayField::CellPos::CellPos(int i, int j)
+{
+	assert(i >= 0 && j >= 0 && i <= fieldSize - 1 && j <= fieldSize - 1);
+	x = i;
+	y = j;
+}
 
 vector<PlayField::CellPos> PlayField::getEmptyCells() const
 {
