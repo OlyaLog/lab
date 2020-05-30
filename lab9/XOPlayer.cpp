@@ -24,22 +24,39 @@ void XOPlayer::makeMove(PlayField::CellPos iCell)
 
 void XOPlayer::makeMove()
 {
-	assert(currentState()[next] == PlayField::csEmpty || currentState().checkFieldStatus() == PlayField::fsNormal);
+	assert(currentState().checkFieldStatus() == PlayField::fsNormal);
+	double max = 0;
+	int child = 0;
 	for (int i = 0; i < getCurrentTree().childCount(); i++)
 	{
-		if (getCurrentTree()[i].value()[next] != PlayField::Cells::csEmpty)
+		const double crossWin = getCurrentTree()[i].getResult().crossWinCount;
+		const double noughtWin = getCurrentTree()[i].getResult().noughtWinCount;
+		const double draw = getCurrentTree()[i].getResult().drawCount;
+		if (selectPlayer() == PlayField::csCross)
 		{
-			move = &getCurrentTree()[i];
-			break;
+			const double count = (crossWin + draw) / (crossWin + noughtWin + draw);
+			if (count > max)
+			{
+				max = count;
+				child = i;
+			}
+		}
+		else
+		{
+			const double count = (noughtWin + draw) / (crossWin + noughtWin + draw);
+			if (count > max)
+			{
+				max = count;
+				child = i;
+			}
 		}
 	}
+	move = &getCurrentTree()[child];
 }
 
 PlayField XOPlayer::currentState() const
 {
-	if (move)
-		return move->value();
-	return treeNode.value();
+	return getCurrentTree().value();
 }
 
 PlayField::Status XOPlayer::fieldStatus() const

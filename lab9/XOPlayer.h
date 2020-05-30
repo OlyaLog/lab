@@ -11,11 +11,9 @@ public:
 	PlayField currentState() const;
 	PlayField::Status fieldStatus() const;
 	const TreeNode& getCurrentTree() const;
-	void setNext(PlayField::CellPos pos) { next = pos; }
 	
 private:
 	const TreeNode& treeNode;
 	TreeNode* move;
 	const PlayField::Cells player;
-	PlayField::CellPos next = PlayField::CellPos(NULL,NULL);
 };

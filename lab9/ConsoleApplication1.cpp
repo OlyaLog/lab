@@ -4,21 +4,6 @@
 
 using namespace std;
 
-struct Result
-{
-	int noughtWinCount;
-	int crossWinCount;
-	int drawCount;
-
-	Result& operator+=(const Result& ir)
-	{
-		noughtWinCount += ir.noughtWinCount;
-		crossWinCount += ir.crossWinCount;
-		drawCount += ir.drawCount;
-		return *this;
-	}
-};
-
 void drawCell(PlayField::Cells cell)
 {
 	switch (cell)
@@ -66,8 +51,9 @@ void buildSubTree(TreeNode& treeNode)
 	
 }
 
-void walkTree(TreeNode& treeNode, Result& result)
+void walkTree(TreeNode& treeNode)
 {
+	TreeNode::Result result = {0,0,0};
 	if (treeNode.childCount() == 0)
 	{
 		switch (treeNode.value().checkFieldStatus())
@@ -82,46 +68,12 @@ void walkTree(TreeNode& treeNode, Result& result)
 			result.drawCount++;
 			break;
 		}
+		treeNode.setResult(result);
 	}
 	for (int i = 0; i < treeNode.childCount(); i++)
 	{
-		walkTree(treeNode[i], result);
+		walkTree(treeNode[i]);
 	}
-}
-
-PlayField::CellPos nextMove (const TreeNode& treeNode, int child)
-{
-	for (int i = 0; i < PlayField::fieldSize; i++)
-	{
-		for (int j = 0; j < PlayField::fieldSize; j++)
-		{
-			if (treeNode.value()[PlayField::CellPos(i, j)] != treeNode[i].value()[PlayField::CellPos(i, j)])
-				return PlayField::CellPos(i, j);
-		}
-	}
-}
-
-PlayField::CellPos maxWin(const TreeNode& treeRoot, PlayField::Cells cell)
-{
-	int max = 0;
-	PlayField::CellPos next = PlayField::CellPos(0, 0);
-	for (int i = 0; i < treeRoot.childCount(); i++)
-	{
-		Result result = { 0,0,0 };
-		PlayField::CellPos next = PlayField::CellPos(0, 0);
-		walkTree(treeRoot[i], result);
-		if (cell == PlayField::csCross && result.crossWinCount > max)
-		{
-			max = result.crossWinCount;
-			next = nextMove(treeRoot, i);
-		}
-		if (cell == PlayField::csNought && result.noughtWinCount > max)
-		{
-			max = result.crossWinCount;
-			next = nextMove(treeRoot, i);
-		}
-	}
-	return next;
 }
 
 void playerMove(XOPlayer& player)
@@ -138,22 +90,16 @@ void playerMove(XOPlayer& player)
 	drawField(player.currentState());
 }
 
-void botMove(XOPlayer& player)
-{
-	player.setNext(maxWin(player.getCurrentTree(), player.selectPlayer()));
-	player.makeMove();
-	drawField(player.currentState());
-}
-
 int main()
 {
 	PlayField playField;
 	TreeNode treeRoot;
 	buildSubTree(treeRoot);
+	walkTree(treeRoot);
 	cout << "Select player (0 - O, 1 - X)" << endl;
 	int sel_player;
 	cin >> sel_player;
-	XOPlayer player(treeRoot, (sel_player == 0 ? PlayField::csCross : PlayField::csNought));
+	XOPlayer player(treeRoot, (sel_player == 0 ? PlayField::csNought : PlayField::csCross));
 	do 
 	{
 		if (sel_player == 0)
@@ -161,11 +107,13 @@ int main()
 			playerMove(player);
 			if (player.fieldStatus() != PlayField::fsNormal)
 				break;
-			botMove(player);
+			player.makeMove();
+			drawField(player.currentState());
 		}
 		else
 		{
-			botMove(player);
+			player.makeMove();
+			drawField(player.currentState());
 			if (player.fieldStatus() != PlayField::fsNormal)
 				break;
 			playerMove(player);

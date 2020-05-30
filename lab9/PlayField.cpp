@@ -36,16 +36,20 @@ bool PlayField::checkHorizontal(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
-		return cellsState[i * fieldSize] == cellsState[1 + i * fieldSize] && cellsState[i * fieldSize] == cellsState[2 + i * fieldSize] && cellsState[i * fieldSize] == cell;
+		if (cellsState[i * fieldSize] == cellsState[1 + i * fieldSize] && cellsState[i * fieldSize] == cellsState[2 + i * fieldSize] && cellsState[i * fieldSize] == cell)
+			return true;
 	}
+	return false;
 }
 
 bool PlayField::checkVertical(Cells cell) const
 {
 	for (int i = 0; i < fieldSize; i++)
 	{
-		return cellsState[i] == cellsState[i + fieldSize] && cellsState[i] == cellsState[i + 2 * fieldSize] && cellsState[i] == cell;
+		if (cellsState[i] == cellsState[i + fieldSize] && cellsState[i] == cellsState[i + 2 * fieldSize] && cellsState[i] == cell)
+			return true;
 	}
+	return false;
 }
 
 bool PlayField::checkDiagonals(Cells cell) const

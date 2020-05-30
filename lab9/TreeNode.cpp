@@ -41,6 +41,16 @@ const PlayField& TreeNode::value() const
 	return field;
 }
 
+void TreeNode::setResult(Result newResult)
+{
+	result += newResult;
+	while (parent)
+	{
+		parent->result += result;
+		parent = parent->parent;
+	}
+}
+
 int TreeNode::childQty() const
 {
 	if (parent)
