@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 #include <string>
-#include "TreeNode.h"
 #include "XOPlayer.h"
 
 using namespace std;
@@ -90,7 +89,7 @@ void walkTree(TreeNode& treeNode, Result& result)
 	}
 }
 
-PlayField::CellPos nextMove (TreeNode& treeNode, int child)
+PlayField::CellPos nextMove (const TreeNode& treeNode, int child)
 {
 	for (int i = 0; i < PlayField::fieldSize; i++)
 	{
@@ -102,7 +101,7 @@ PlayField::CellPos nextMove (TreeNode& treeNode, int child)
 	}
 }
 
-PlayField::CellPos maxWin(TreeNode& treeRoot, PlayField::Cells cell)
+PlayField::CellPos maxWin(const TreeNode& treeRoot, PlayField::Cells cell)
 {
 	int max = 0;
 	PlayField::CellPos next = PlayField::CellPos(0, 0);
@@ -141,7 +140,7 @@ void playerMove(XOPlayer& player)
 
 void botMove(XOPlayer& player)
 {
-	player.next = maxWin(player.getTree(), player.selectPlayer());
+	player.setNext(maxWin(player.getCurrentTree(), player.selectPlayer()));
 	player.makeMove();
 	drawField(player.currentState());
 }
@@ -149,7 +148,7 @@ void botMove(XOPlayer& player)
 int main()
 {
 	PlayField playField;
-	TreeNode treeRoot(playField, nullptr);
+	TreeNode treeRoot;
 	buildSubTree(treeRoot);
 	cout << "Select player (0 - O, 1 - X)" << endl;
 	int sel_player;

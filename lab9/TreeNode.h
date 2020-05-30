@@ -4,7 +4,7 @@
 class TreeNode
 {
 public:
-	TreeNode(PlayField newField, TreeNode* newTreeNode);
+	TreeNode(PlayField newField = PlayField(), TreeNode* newTreeNode = nullptr);
 	~TreeNode();
 	bool isTerminal() const;
 	void addChild(TreeNode*);

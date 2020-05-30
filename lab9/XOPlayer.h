@@ -4,16 +4,18 @@
 class XOPlayer
 {
 public:
-	XOPlayer(TreeNode& newTreeNode, PlayField::Cells sel_player): treeNode(&newTreeNode), player(sel_player){}
+	XOPlayer(TreeNode& newTreeNode, PlayField::Cells sel_player): treeNode(newTreeNode), player(sel_player){}
 	PlayField::Cells selectPlayer() const;
 	void makeMove(PlayField::CellPos iCell);
 	void makeMove();
 	PlayField currentState() const;
 	PlayField::Status fieldStatus() const;
-	TreeNode& getTree() { return *treeNode; }
-	PlayField::CellPos next = PlayField::CellPos(0,0); 
+	const TreeNode& getCurrentTree() const;
+	void setNext(PlayField::CellPos pos) { next = pos; }
 	
 private:
-	TreeNode* treeNode;
+	const TreeNode& treeNode;
+	TreeNode* move;
 	const PlayField::Cells player;
+	PlayField::CellPos next = PlayField::CellPos(NULL,NULL);
 };
