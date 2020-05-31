@@ -53,22 +53,22 @@ void buildSubTree(TreeNode& treeNode)
 
 void walkTree(TreeNode& treeNode)
 {
-	TreeNode::Result result = {0,0,0};
-	if (treeNode.childCount() == 0)
+	if (treeNode.isTerminal())
 	{
 		switch (treeNode.value().checkFieldStatus())
 		{
 		case PlayField::fsNoughtsWin:
-			result.noughtWinCount++;
+			treeNode.result.noughtWinCount++;
 			break;
 		case PlayField::fsCrossesWin:
-			result.crossWinCount++;
+			treeNode.result.crossWinCount++;
 			break;
 		case PlayField::fsDraw:
-			result.drawCount++;
+			treeNode.result.drawCount++;
 			break;
 		}
-		treeNode.setResult(result);
+		treeNode.addResult(treeNode.result);
+		return;
 	}
 	for (int i = 0; i < treeNode.childCount(); i++)
 	{

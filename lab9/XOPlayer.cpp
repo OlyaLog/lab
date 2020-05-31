@@ -29,9 +29,9 @@ void XOPlayer::makeMove()
 	int child = 0;
 	for (int i = 0; i < getCurrentTree().childCount(); i++)
 	{
-		const double crossWin = getCurrentTree()[i].getResult().crossWinCount;
-		const double noughtWin = getCurrentTree()[i].getResult().noughtWinCount;
-		const double draw = getCurrentTree()[i].getResult().drawCount;
+		const double crossWin = getCurrentTree()[i].result.crossWinCount;
+		const double noughtWin = getCurrentTree()[i].result.noughtWinCount;
+		const double draw = getCurrentTree()[i].result.drawCount;
 		if (selectPlayer() == PlayField::csCross)
 		{
 			const double count = (crossWin + draw) / (crossWin + noughtWin + draw);

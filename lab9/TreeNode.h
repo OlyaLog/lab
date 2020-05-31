@@ -6,9 +6,9 @@ class TreeNode
 public:
 	struct Result
 	{
-		int noughtWinCount;
-		int crossWinCount;
-		int drawCount;
+		int noughtWinCount = 0;
+		int crossWinCount = 0;
+		int drawCount = 0;
 
 		Result& operator+=(const Result& ir)
 		{
@@ -25,14 +25,13 @@ public:
 	TreeNode& operator[] (int) const;
 	int childCount() const;
 	const PlayField& value() const;
-	void setResult(Result newResult);
-	Result getResult() const { return result; }
+	void addResult(Result newResult);
+	Result result;
 
 private:
 	TreeNode* parent;
 	const PlayField field;
 	int childQty() const;
 	std::vector<TreeNode*> children;
-	Result result = { 0,0,0 };
 };
 

@@ -41,13 +41,12 @@ const PlayField& TreeNode::value() const
 	return field;
 }
 
-void TreeNode::setResult(Result newResult)
+void TreeNode::addResult(Result newResult)
 {
-	result += newResult;
-	while (parent)
+	if (parent)
 	{
-		parent->result += result;
-		parent = parent->parent;
+		parent->result += newResult;
+		parent->addResult(newResult);
 	}
 }
 
