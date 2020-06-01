@@ -1,9 +1,7 @@
 #include "XOPlayer.h"
-#include <cassert>
 
 PlayField::Cells XOPlayer::selectPlayer() const
 {
-	assert(player != PlayField::csEmpty);
 	if (player == PlayField::csNought)
 		return PlayField::csCross;
 	return PlayField::csNought;
