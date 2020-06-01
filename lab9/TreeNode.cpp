@@ -43,10 +43,11 @@ const PlayField& TreeNode::value() const
 
 void TreeNode::addResult(Result newResult)
 {
+	result += newResult;
 	if (parent)
 	{
-		parent->result += newResult;
-		parent->addResult(newResult);
+		TreeNode& parentTree = *parent;
+		parentTree.addResult(newResult);
 	}
 }
 

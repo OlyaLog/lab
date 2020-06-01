@@ -8,7 +8,7 @@ public:
 	PlayField::Cells selectPlayer() const;
 	void makeMove(PlayField::CellPos iCell);
 	void makeMove();
-	PlayField currentState() const;
+	const PlayField& currentState() const;
 	PlayField::Status fieldStatus() const;
 	const TreeNode& getCurrentTree() const;
 	

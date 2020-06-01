@@ -26,12 +26,13 @@ public:
 	int childCount() const;
 	const PlayField& value() const;
 	void addResult(Result newResult);
-	Result result;
+	Result getResult() const { return result; }
 
 private:
 	TreeNode* parent;
 	const PlayField field;
 	int childQty() const;
 	std::vector<TreeNode*> children;
+	Result result;
 };
 

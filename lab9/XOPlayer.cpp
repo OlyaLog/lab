@@ -3,6 +3,7 @@
 
 PlayField::Cells XOPlayer::selectPlayer() const
 {
+	assert(player != PlayField::csEmpty);
 	if (player == PlayField::csNought)
 		return PlayField::csCross;
 	return PlayField::csNought;
@@ -10,7 +11,7 @@ PlayField::Cells XOPlayer::selectPlayer() const
 
 void XOPlayer::makeMove(PlayField::CellPos iCell)
 {
-	assert(currentState()[iCell] == PlayField::csEmpty || currentState().checkFieldStatus() == PlayField::fsNormal);
+	assert(currentState()[iCell] == PlayField::csEmpty && currentState().checkFieldStatus() == PlayField::fsNormal);
 	for (int i = 0; i < getCurrentTree().childCount(); i++)
 	{
 		if (getCurrentTree()[i].value()[iCell] != PlayField::Cells::csEmpty)
@@ -29,9 +30,9 @@ void XOPlayer::makeMove()
 	int child = 0;
 	for (int i = 0; i < getCurrentTree().childCount(); i++)
 	{
-		const double crossWin = getCurrentTree()[i].result.crossWinCount;
-		const double noughtWin = getCurrentTree()[i].result.noughtWinCount;
-		const double draw = getCurrentTree()[i].result.drawCount;
+		const double crossWin = getCurrentTree()[i].getResult().crossWinCount;
+		const double noughtWin = getCurrentTree()[i].getResult().noughtWinCount;
+		const double draw = getCurrentTree()[i].getResult().drawCount;
 		if (selectPlayer() == PlayField::csCross)
 		{
 			const double count = (crossWin + draw) / (crossWin + noughtWin + draw);
@@ -54,7 +55,7 @@ void XOPlayer::makeMove()
 	move = &getCurrentTree()[child];
 }
 
-PlayField XOPlayer::currentState() const
+const PlayField& XOPlayer::currentState() const
 {
 	return getCurrentTree().value();
 }

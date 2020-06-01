@@ -55,19 +55,20 @@ void walkTree(TreeNode& treeNode)
 {
 	if (treeNode.isTerminal())
 	{
+		TreeNode::Result result;
 		switch (treeNode.value().checkFieldStatus())
 		{
 		case PlayField::fsNoughtsWin:
-			treeNode.result.noughtWinCount++;
+			result.noughtWinCount++;
 			break;
 		case PlayField::fsCrossesWin:
-			treeNode.result.crossWinCount++;
+			result.crossWinCount++;
 			break;
 		case PlayField::fsDraw:
-			treeNode.result.drawCount++;
+			result.drawCount++;
 			break;
 		}
-		treeNode.addResult(treeNode.result);
+		treeNode.addResult(result);
 		return;
 	}
 	for (int i = 0; i < treeNode.childCount(); i++)
