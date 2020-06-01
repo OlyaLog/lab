@@ -45,10 +45,7 @@ void TreeNode::addResult(Result newResult)
 {
 	result += newResult;
 	if (parent)
-	{
-		TreeNode& parentTree = *parent;
-		parentTree.addResult(newResult);
-	}
+		parent->addResult(newResult);
 }
 
 int TreeNode::childQty() const
